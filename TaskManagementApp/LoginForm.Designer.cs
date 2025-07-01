@@ -144,6 +144,7 @@
             this.exitLoginFormButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.exitLoginFormButton.FillColor = System.Drawing.Color.Transparent;
             this.exitLoginFormButton.Font = new System.Drawing.Font("Segoe UI Semibold", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.exitLoginFormButton.HoverState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.exitLoginFormButton.IconColor = System.Drawing.Color.Red;
             this.exitLoginFormButton.Location = new System.Drawing.Point(425, 12);
             this.exitLoginFormButton.Name = "exitLoginFormButton";

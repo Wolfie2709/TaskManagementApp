@@ -11,6 +11,13 @@ namespace TaskManagementApp
         public SignUpForm()
         {
             InitializeComponent();
+
+            this.FormBorderStyle = FormBorderStyle.None; // Bỏ viền gốc
+            this.StartPosition = FormStartPosition.CenterScreen;
+
+            var borderlessForm = new Guna.UI2.WinForms.Guna2BorderlessForm();
+            borderlessForm.ContainerControl = this;
+
             // Add event handler
             btnRegister.Click += btnRegister_Click;
         }
