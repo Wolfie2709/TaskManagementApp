@@ -143,6 +143,12 @@ namespace TaskManagementApp
             this.Text = "Task Manager";
             this.ResumeLayout(false);
 
+            this.calendar = new System.Windows.Forms.MonthCalendar();
+            this.calendar.Location = new System.Drawing.Point(870, 30);
+            this.calendar.MaxSelectionCount = 1;
+            this.calendar.DateChanged += new System.Windows.Forms.DateRangeEventHandler(this.calendar_DateChanged);
+            this.Controls.Add(this.calendar);
+
         }
 
         #endregion
