@@ -19,9 +19,9 @@ namespace TaskManagementApp
         {
             this.lvTaskSummary = new System.Windows.Forms.ListView();
             this.lvTaskDetails = new System.Windows.Forms.ListView();
-            this.btnAddTask = new System.Windows.Forms.Button();
             this.btnTaskLists = new System.Windows.Forms.Button();
             this.btnLogout = new System.Windows.Forms.Button();
+            this.btnAddTask = new Guna.UI2.WinForms.Guna2Button();
             this.SuspendLayout();
             // 
             // lvTaskSummary
@@ -49,21 +49,10 @@ namespace TaskManagementApp
             this.lvTaskDetails.TabIndex = 1;
             this.lvTaskDetails.UseCompatibleStateImageBehavior = false;
             this.lvTaskDetails.View = System.Windows.Forms.View.Details;
-
+            // 
             // Add columns for task details
             this.lvTaskDetails.Columns.Add("Task", 150);
             this.lvTaskDetails.Columns.Add("Details", 380);
-            // 
-            // btnAddTask
-            // 
-            this.btnAddTask.Location = new System.Drawing.Point(30, 450);
-            this.btnAddTask.Name = "btnAddTask";
-            this.btnAddTask.Size = new System.Drawing.Size(100, 30);
-            this.btnAddTask.TabIndex = 2;
-            this.btnAddTask.Text = "Add Task";
-            this.btnAddTask.UseVisualStyleBackColor = true;
-            this.btnAddTask.Click += new System.EventHandler(this.btnAddTask_Click);
-            // 
             // btnTaskLists
             // 
             this.btnTaskLists.Location = new System.Drawing.Point(140, 450);
@@ -84,25 +73,42 @@ namespace TaskManagementApp
             this.btnLogout.UseVisualStyleBackColor = true;
             this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
             // 
+            // btnAddTask
+            // 
+            this.btnAddTask.BorderRadius = 15;
+            this.btnAddTask.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btnAddTask.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btnAddTask.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btnAddTask.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btnAddTask.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btnAddTask.ForeColor = System.Drawing.Color.White;
+            this.btnAddTask.Location = new System.Drawing.Point(30, 450);
+            this.btnAddTask.Name = "btnAddTask";
+            this.btnAddTask.Size = new System.Drawing.Size(100, 30);
+            this.btnAddTask.TabIndex = 5;
+            this.btnAddTask.Text = "Add Task";
+            this.btnAddTask.Click += new System.EventHandler(this.btnAddTask_Click);
+            // 
             // MainForm
             // 
             this.ClientSize = new System.Drawing.Size(880, 510);
+            this.Controls.Add(this.btnAddTask);
             this.Controls.Add(this.lvTaskSummary);
             this.Controls.Add(this.lvTaskDetails);
-            this.Controls.Add(this.btnAddTask);
             this.Controls.Add(this.btnTaskLists);
             this.Controls.Add(this.btnLogout);
             this.Name = "MainForm";
             this.Text = "Task Manager";
             this.ResumeLayout(false);
+
         }
 
         #endregion
 
         private System.Windows.Forms.ListView lvTaskSummary;
         private System.Windows.Forms.ListView lvTaskDetails;
-        private System.Windows.Forms.Button btnAddTask;
         private System.Windows.Forms.Button btnTaskLists;
         private System.Windows.Forms.Button btnLogout;
+        private Guna.UI2.WinForms.Guna2Button btnAddTask;
     }
 }
