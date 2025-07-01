@@ -18,6 +18,12 @@ namespace TaskManagementApp
         {
             InitializeComponent();
 
+            this.FormBorderStyle = FormBorderStyle.None; // Bỏ viền gốc
+            this.StartPosition = FormStartPosition.CenterScreen;
+
+            var borderlessForm = new Guna.UI2.WinForms.Guna2BorderlessForm();
+            borderlessForm.ContainerControl = this;
+
             // Attach click events
             buttonLI.Click += buttonLI_Click;
             buttonSU.Click += buttonSU_Click;

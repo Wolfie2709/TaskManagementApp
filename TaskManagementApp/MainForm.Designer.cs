@@ -51,8 +51,8 @@ namespace TaskManagementApp
             this.lvTaskDetails.View = System.Windows.Forms.View.Details;
 
             // Add columns for task details
-            this.lvTaskDetails.Columns.Add("Property", 150);
-            this.lvTaskDetails.Columns.Add("Value", 380);
+            this.lvTaskDetails.Columns.Add("Task", 150);
+            this.lvTaskDetails.Columns.Add("Details", 380);
             // 
             // btnAddTask
             // 
