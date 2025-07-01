@@ -24,5 +24,10 @@ namespace TaskManagementApp
         {
             return taskDAL.InsertTask(task);
         }
+        public List<AppTask> GetTasksByUserAndTaskList(int userId, int taskListId)
+        {
+            return taskDAL.GetTasksByUserAndTaskList(userId, taskListId);
+        }
+
     }
 }

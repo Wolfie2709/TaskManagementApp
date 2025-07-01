@@ -5,6 +5,8 @@ namespace TaskManagementApp
     public partial class MainForm : Form
     {
         private System.ComponentModel.IContainer components = null;
+        private System.Windows.Forms.MonthCalendar calendar;
+
 
         protected override void Dispose(bool disposing)
         {
@@ -95,6 +97,13 @@ namespace TaskManagementApp
             this.Name = "MainForm";
             this.Text = "Task Manager";
             this.ResumeLayout(false);
+
+            this.calendar = new System.Windows.Forms.MonthCalendar();
+            this.calendar.Location = new System.Drawing.Point(870, 30);
+            this.calendar.MaxSelectionCount = 1;
+            this.calendar.DateChanged += new System.Windows.Forms.DateRangeEventHandler(this.calendar_DateChanged);
+            this.Controls.Add(this.calendar);
+
         }
 
         #endregion

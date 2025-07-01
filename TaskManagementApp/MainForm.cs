@@ -9,26 +9,16 @@ namespace TaskManagementApp
     {
         private User currentUser;
         private TaskService taskService = new TaskService();
+        private TaskList currentTaskList;
+
 
         public MainForm(User user)
         {
             InitializeComponent();
             currentUser = user;
-            LoadTaskSummaries();
-        }
+            currentTaskList = null; // No list selected yet
+            lvTaskSummary.Items.Clear(); // Clear on startup
 
-        private void LoadTaskSummaries()
-        {
-            lvTaskSummary.Items.Clear();
-            var tasks = taskService.GetTasksByUser(currentUser.UserID);
-
-            foreach (AppTask task in tasks)
-            {
-                var item = new ListViewItem(task.TaskID.ToString());
-                item.SubItems.Add(task.Title);
-                item.Tag = task;
-                lvTaskSummary.Items.Add(item);
-            }
         }
 
         private void lvTaskSummary_SelectedIndexChanged(object sender, EventArgs e)
@@ -54,16 +44,64 @@ namespace TaskManagementApp
 
         private void btnAddTask_Click(object sender, EventArgs e)
         {
-            AddTask form = new AddTask(currentUser);
-            form.ShowDialog();
-            LoadTaskSummaries(); // Refresh the list
+            AddTask form = new AddTask(currentUser, currentTaskList); // ✅ pass list
+            if (form.ShowDialog() == DialogResult.OK && currentTaskList != null)
+            {
+                LoadTasksByTaskList(currentTaskList.TaskListID); // refresh tasks in the same list
+            }
         }
+
+
 
         private void btnTaskLists_Click(object sender, EventArgs e)
         {
             TaskListForm form = new TaskListForm(currentUser);
-            form.ShowDialog();
+
+            if (form.ShowDialog() == DialogResult.OK && form.SelectedTaskList != null)
+            {
+                currentTaskList = form.SelectedTaskList;
+                LoadTasksByTaskList(currentTaskList.TaskListID);
+            }
         }
+
+        private void LoadTasksByTaskList(int taskListId)
+        {
+            lvTaskSummary.Items.Clear();
+
+            var tasks = taskService.GetTasksByUserAndTaskList(currentUser.UserID, taskListId);
+
+            foreach (AppTask task in tasks)
+            {
+                var item = new ListViewItem(task.TaskID.ToString());
+                item.SubItems.Add(task.Title);
+                item.Tag = task;
+                lvTaskSummary.Items.Add(item);
+            }
+        }
+
+        private void calendar_DateChanged(object sender, DateRangeEventArgs e)
+        {
+            if (currentTaskList == null) return;
+
+            DateTime selectedDate = e.Start.Date;
+
+            var tasks = taskService.GetTasksByUserAndTaskList(currentUser.UserID, currentTaskList.TaskListID);
+
+            var filtered = tasks.FindAll(t => t.DueDate.HasValue && t.DueDate.Value.Date == selectedDate);
+
+            lvTaskSummary.Items.Clear();
+
+            foreach (AppTask task in filtered)
+            {
+                var item = new ListViewItem(task.TaskID.ToString());
+                item.SubItems.Add(task.Title);
+                item.Tag = task;
+                lvTaskSummary.Items.Add(item);
+            }
+
+            lvTaskDetails.Items.Clear(); // clear details panel
+        }
+
 
         private void btnLogout_Click(object sender, EventArgs e)
         {

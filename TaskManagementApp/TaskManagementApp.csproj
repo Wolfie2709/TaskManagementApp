@@ -59,10 +59,18 @@
     <Compile Include="AddTask.Designer.cs">
       <DependentUpon>AddTask.cs</DependentUpon>
     </Compile>
+    <Compile Include="AddTaskListForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddTaskListForm.Designer.cs">
+      <DependentUpon>AddTaskListForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataAccess\DatabaseHelper.cs" />
     <Compile Include="DataAccess\TaskDAL.cs" />
+    <Compile Include="DataAccess\TaskListDAL.cs" />
     <Compile Include="DataAccess\UserDAL.cs" />
     <Compile Include="DataAccess\UserRepo.cs" />
+    <Compile Include="Logic\TaskListService.cs" />
     <Compile Include="Logic\UserService.cs" />
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
