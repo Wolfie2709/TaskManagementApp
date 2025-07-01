@@ -35,6 +35,7 @@
             this.buttonSU = new Guna.UI2.WinForms.Guna2Button();
             this.textBoxUsername = new Guna.UI2.WinForms.Guna2TextBox();
             this.textBoxPassword = new Guna.UI2.WinForms.Guna2TextBox();
+            this.exitLoginFormButton = new Guna.UI2.WinForms.Guna2ControlBox();
             this.SuspendLayout();
             // 
             // label1
@@ -138,11 +139,23 @@
             this.textBoxPassword.Size = new System.Drawing.Size(348, 36);
             this.textBoxPassword.TabIndex = 10;
             // 
+            // exitLoginFormButton
+            // 
+            this.exitLoginFormButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.exitLoginFormButton.FillColor = System.Drawing.Color.Transparent;
+            this.exitLoginFormButton.Font = new System.Drawing.Font("Segoe UI Semibold", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.exitLoginFormButton.IconColor = System.Drawing.Color.Red;
+            this.exitLoginFormButton.Location = new System.Drawing.Point(425, 12);
+            this.exitLoginFormButton.Name = "exitLoginFormButton";
+            this.exitLoginFormButton.Size = new System.Drawing.Size(30, 30);
+            this.exitLoginFormButton.TabIndex = 11;
+            // 
             // LoginForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(467, 519);
+            this.Controls.Add(this.exitLoginFormButton);
             this.Controls.Add(this.textBoxPassword);
             this.Controls.Add(this.textBoxUsername);
             this.Controls.Add(this.buttonSU);
@@ -167,5 +180,6 @@
         private Guna.UI2.WinForms.Guna2Button buttonSU;
         private Guna.UI2.WinForms.Guna2TextBox textBoxUsername;
         private Guna.UI2.WinForms.Guna2TextBox textBoxPassword;
+        private Guna.UI2.WinForms.Guna2ControlBox exitLoginFormButton;
     }
 }
