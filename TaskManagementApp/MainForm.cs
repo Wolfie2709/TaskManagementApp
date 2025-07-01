@@ -13,6 +13,13 @@ namespace TaskManagementApp
         public MainForm(User user)
         {
             InitializeComponent();
+
+            this.FormBorderStyle = FormBorderStyle.None; // Bỏ viền gốc
+            this.StartPosition = FormStartPosition.CenterScreen;
+
+            var borderlessForm = new Guna.UI2.WinForms.Guna2BorderlessForm();
+            borderlessForm.ContainerControl = this;
+
             currentUser = user;
             LoadTaskSummaries();
         }
