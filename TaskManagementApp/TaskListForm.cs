@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using TaskManagementApp.Logic;
 using TaskManagementApp.Models;
 
 namespace TaskManagementApp
@@ -7,6 +8,9 @@ namespace TaskManagementApp
     public partial class TaskListForm : Form
     {
         private User currentUser;
+        public TaskList SelectedTaskList { get; private set; }
+        private TaskListService taskListService = new TaskListService();
+
 
         public TaskListForm(User user)
         {
@@ -17,37 +21,64 @@ namespace TaskManagementApp
 
         private void LoadTaskLists()
         {
-            // For now, just show some sample lists
-            // You can implement TaskListService later
             lvTaskLists.Items.Clear();
 
-            // Sample data
-            var item1 = new ListViewItem("1");
-            item1.SubItems.Add("Personal Tasks");
-            item1.SubItems.Add("My personal to-do items");
-            lvTaskLists.Items.Add(item1);
+            var taskLists = taskListService.GetTaskListsByUser(currentUser.UserID);
 
-            var item2 = new ListViewItem("2");
-            item2.SubItems.Add("Work Tasks");
-            item2.SubItems.Add("Office related tasks");
-            lvTaskLists.Items.Add(item2);
-
-            var item3 = new ListViewItem("3");
-            item3.SubItems.Add("Shopping List");
-            item3.SubItems.Add("Items to buy");
-            lvTaskLists.Items.Add(item3);
+            foreach (var list in taskLists)
+            {
+                var item = new ListViewItem(list.TaskListID.ToString());
+                item.SubItems.Add(list.Name);
+                item.SubItems.Add(list.Description);
+                lvTaskLists.Items.Add(item);
+            }
         }
+
+
 
         private void btnAddList_Click(object sender, EventArgs e)
         {
-            // You can implement AddTaskListForm later
-            MessageBox.Show("Add Task List functionality coming soon!", "Info",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            var form = new AddTaskListForm(currentUser);
+            if (form.ShowDialog() == DialogResult.OK && form.NewTaskList != null)
+            {
+                var service = new TaskListService();
+                bool success = service.AddTaskList(form.NewTaskList);
+
+                if (success)
+                {
+                    MessageBox.Show("Task list added successfully.");
+                    LoadTaskLists(); // Refresh view
+                }
+                else
+                {
+                    MessageBox.Show("Failed to add task list.");
+                }
+            }
         }
+
 
         private void btnClose_Click(object sender, EventArgs e)
         {
+            if (lvTaskLists.SelectedItems.Count > 0)
+            {
+                var selectedItem = lvTaskLists.SelectedItems[0];
+                SelectedTaskList = new TaskList
+                {
+                    TaskListID = int.Parse(selectedItem.SubItems[0].Text),
+                    Name = selectedItem.SubItems[1].Text,
+                    Description = selectedItem.SubItems[2].Text,
+                    UserID = currentUser.UserID
+                };
+
+                this.DialogResult = DialogResult.OK;
+            }
+            else
+            {
+                this.DialogResult = DialogResult.Cancel;
+            }
+
             this.Close();
         }
+
     }
 }

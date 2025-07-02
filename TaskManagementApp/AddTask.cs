@@ -8,16 +8,19 @@ namespace TaskManagementApp
     {
         private readonly User currentUser;
         private readonly TaskService taskService = new TaskService();
+        private readonly TaskList currentList;
 
-        public AddTask(User user)
+
+        public AddTask(User user, TaskList taskList = null)
         {
             InitializeComponent();
             currentUser = user;
+            currentList = taskList;
 
-            // Set default values
             cbPriority.SelectedIndex = 1; // Medium
             cbStatus.SelectedIndex = 0;   // To Do
         }
+
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
@@ -31,6 +34,7 @@ namespace TaskManagementApp
             var newTask = new Models.Task
             {
                 UserID = currentUser.UserID,
+                TaskListID = currentList?.TaskListID, // ✅ Add this line
                 Title = txtTaskName.Text.Trim(),
                 Description = txtDescription.Text.Trim(),
                 Status = cbStatus.SelectedItem?.ToString() ?? "To Do",
@@ -38,6 +42,7 @@ namespace TaskManagementApp
                 Priority = cbPriority.SelectedItem?.ToString() ?? "Medium",
                 CreatedAt = DateTime.Now
             };
+
 
             bool success = taskService.AddTask(newTask);
 

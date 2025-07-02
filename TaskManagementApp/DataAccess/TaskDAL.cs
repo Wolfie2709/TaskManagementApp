@@ -10,6 +10,8 @@ namespace TaskManagementApp.DAL
 {
     public class TaskDAL
     {
+        private readonly string connectionString = DatabaseHelper.GetConnection().ConnectionString;
+
         public List<AppTask> GetTasksByUser(int userId)
         {
             List<AppTask> tasks = new List<AppTask>();
@@ -48,9 +50,8 @@ namespace TaskManagementApp.DAL
             using (SqlConnection conn = DatabaseHelper.GetConnection())
             {
                 conn.Open();
-                string query = @"INSERT INTO Tasks 
-            (UserID, Title, Description, Status, DueDate, Priority)
-            VALUES (@UserID, @Title, @Description, @Status, @DueDate, @Priority)";
+                string query = @"INSERT INTO Tasks (UserID, Title, Description, Status, DueDate, Priority, TaskListID)
+VALUES (@UserID, @Title, @Description, @Status, @DueDate, @Priority, @TaskListID)";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@UserID", task.UserID);
@@ -59,9 +60,45 @@ namespace TaskManagementApp.DAL
                 cmd.Parameters.AddWithValue("@Status", task.Status);
                 cmd.Parameters.AddWithValue("@DueDate", (object)task.DueDate ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@Priority", task.Priority);
+                cmd.Parameters.AddWithValue("@TaskListID", task.TaskListID);
 
                 return cmd.ExecuteNonQuery() > 0;
             }
+        }
+        public List<AppTask> GetTasksByUserAndTaskList(int userId, int taskListId)
+        {
+            var tasks = new List<AppTask>();
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = "SELECT * FROM Tasks WHERE UserID = @UserID AND TaskListID = @TaskListID";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@UserID", userId);
+                cmd.Parameters.AddWithValue("@TaskListID", taskListId);
+
+                conn.Open();
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        tasks.Add(new AppTask
+                        {
+                            TaskID = (int)reader["TaskID"],
+                            UserID = (int)reader["UserID"],
+                            Title = reader["Title"].ToString(),
+                            Description = reader["Description"].ToString(),
+                            Status = reader["Status"].ToString(),
+                            Priority = reader["Priority"].ToString(),
+                            DueDate = reader["DueDate"] as DateTime?,
+                            CreatedAt = (DateTime)reader["CreatedAt"],
+                            // Add this if your model includes TaskListID
+                            TaskListID = reader["TaskListID"] as int?
+                        });
+                    }
+                }
+            }
+
+            return tasks;
         }
 
 

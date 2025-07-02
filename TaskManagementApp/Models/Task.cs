@@ -13,5 +13,7 @@ namespace TaskManagementApp.Models
         public DateTime? DueDate { get; set; } // make nullable if optional
         public string Priority { get; set; }
         public DateTime CreatedAt { get; set; } // ✅ Add this
+        public int? TaskListID { get; set; }
+
     }
 }
