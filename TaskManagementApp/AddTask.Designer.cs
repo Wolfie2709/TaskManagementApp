@@ -9,12 +9,12 @@ namespace TaskManagementApp
         private System.Windows.Forms.Label lblDueDate;
         private System.Windows.Forms.Label lblPriority;
         private System.Windows.Forms.Label lblStatus;
-        private System.Windows.Forms.TextBox txtTaskName;
+        private System.Windows.Forms.TextBox txtTitle; // was txtTaskName
+        private System.Windows.Forms.Button btnSubmit; // was btnAdd
         private System.Windows.Forms.TextBox txtDescription;
         private System.Windows.Forms.DateTimePicker dtpDueDate;
         private System.Windows.Forms.ComboBox cbPriority;
         private System.Windows.Forms.ComboBox cbStatus;
-        private System.Windows.Forms.Button btnAdd;
         private System.Windows.Forms.Button btnCancel;
 
         private void InitializeComponent()
@@ -24,12 +24,12 @@ namespace TaskManagementApp
             this.lblDueDate = new System.Windows.Forms.Label();
             this.lblPriority = new System.Windows.Forms.Label();
             this.lblStatus = new System.Windows.Forms.Label();
-            this.txtTaskName = new System.Windows.Forms.TextBox();
+            this.txtTitle = new System.Windows.Forms.TextBox();
             this.txtDescription = new System.Windows.Forms.TextBox();
             this.dtpDueDate = new System.Windows.Forms.DateTimePicker();
             this.cbPriority = new System.Windows.Forms.ComboBox();
             this.cbStatus = new System.Windows.Forms.ComboBox();
-            this.btnAdd = new System.Windows.Forms.Button();
+            this.btnSubmit = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
@@ -42,12 +42,21 @@ namespace TaskManagementApp
             this.lblTaskName.TabIndex = 0;
             this.lblTaskName.Text = "Task Name:";
             // 
-            // txtTaskName
-            // 
-            this.txtTaskName.Location = new System.Drawing.Point(120, 27);
-            this.txtTaskName.Name = "txtTaskName";
-            this.txtTaskName.Size = new System.Drawing.Size(250, 20);
-            this.txtTaskName.TabIndex = 1;
+            // txtTitle
+            this.txtTitle.Location = new System.Drawing.Point(120, 27);
+            this.txtTitle.Name = "txtTitle";
+            this.txtTitle.Size = new System.Drawing.Size(250, 20);
+            this.txtTitle.TabIndex = 1;
+
+            // btnSubmit
+            this.btnSubmit.Location = new System.Drawing.Point(120, 280);
+            this.btnSubmit.Name = "btnSubmit";
+            this.btnSubmit.Size = new System.Drawing.Size(75, 30);
+            this.btnSubmit.TabIndex = 10;
+            this.btnSubmit.Text = "Add Task";
+            this.btnSubmit.UseVisualStyleBackColor = true;
+            this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
+
             // 
             // lblDescription
             // 
@@ -119,17 +128,6 @@ namespace TaskManagementApp
             this.cbStatus.Name = "cbStatus";
             this.cbStatus.Size = new System.Drawing.Size(250, 21);
             this.cbStatus.TabIndex = 9;
-            // 
-            // btnAdd
-            // 
-            this.btnAdd.Location = new System.Drawing.Point(120, 280);
-            this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(75, 30);
-            this.btnAdd.TabIndex = 10;
-            this.btnAdd.Text = "Add Task";
-            this.btnAdd.UseVisualStyleBackColor = true;
-            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
-            // 
             // btnCancel
             // 
             this.btnCancel.Location = new System.Drawing.Point(220, 280);
@@ -138,13 +136,13 @@ namespace TaskManagementApp
             this.btnCancel.TabIndex = 11;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
-            //this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // AddTask
             // 
             this.ClientSize = new System.Drawing.Size(420, 340);
             this.Controls.Add(this.lblTaskName);
-            this.Controls.Add(this.txtTaskName);
+            this.Controls.Add(this.txtTitle);
             this.Controls.Add(this.lblDescription);
             this.Controls.Add(this.txtDescription);
             this.Controls.Add(this.lblDueDate);
@@ -153,7 +151,7 @@ namespace TaskManagementApp
             this.Controls.Add(this.cbPriority);
             this.Controls.Add(this.lblStatus);
             this.Controls.Add(this.cbStatus);
-            this.Controls.Add(this.btnAdd);
+            this.Controls.Add(this.btnSubmit);
             this.Controls.Add(this.btnCancel);
             this.Name = "AddTask";
             this.Text = "Add New Task";

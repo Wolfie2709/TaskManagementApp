@@ -5,8 +5,22 @@ namespace TaskManagementApp
     public partial class MainForm : Form
     {
         private System.ComponentModel.IContainer components = null;
-        private System.Windows.Forms.MonthCalendar calendar;
 
+        private System.Windows.Forms.MonthCalendar calendar;
+        private System.Windows.Forms.ListView lvTaskSummary;
+        private System.Windows.Forms.ListView lvTaskDetails;
+        private Guna.UI2.WinForms.Guna2Button btnAddTask;
+        private Guna.UI2.WinForms.Guna2Button btnTaskLists;
+        private Guna.UI2.WinForms.Guna2Button btnLogout;
+        private Guna.UI2.WinForms.Guna2Button btnEditTask;
+        private Guna.UI2.WinForms.Guna2Button btnSearch;
+        private Guna.UI2.WinForms.Guna2Button btnFilterPriority;
+        private Guna.UI2.WinForms.Guna2ControlBox exitMainButton;
+        private Guna.UI2.WinForms.Guna2Button btnDeleteTask;
+        private TextBox txtSearch;
+        private ComboBox cbPriorityFilter;
+        private ColumnHeader Task;
+        private ColumnHeader Details;
 
         protected override void Dispose(bool disposing)
         {
@@ -23,10 +37,15 @@ namespace TaskManagementApp
             this.lvTaskDetails = new System.Windows.Forms.ListView();
             this.btnAddTask = new Guna.UI2.WinForms.Guna2Button();
             this.btnTaskLists = new Guna.UI2.WinForms.Guna2Button();
-            this.Task = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.Details = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.btnLogout = new Guna.UI2.WinForms.Guna2Button();
+            this.btnEditTask = new Guna.UI2.WinForms.Guna2Button();
+            this.btnSearch = new Guna.UI2.WinForms.Guna2Button();
+            this.btnFilterPriority = new Guna.UI2.WinForms.Guna2Button();
             this.exitMainButton = new Guna.UI2.WinForms.Guna2ControlBox();
+            this.txtSearch = new System.Windows.Forms.TextBox();
+            this.cbPriorityFilter = new System.Windows.Forms.ComboBox();
+            this.btnDeleteTask = new Guna.UI2.WinForms.Guna2Button();
+            this.calendar = new System.Windows.Forms.MonthCalendar();
             this.SuspendLayout();
             // 
             // lvTaskSummary
@@ -40,8 +59,6 @@ namespace TaskManagementApp
             this.lvTaskSummary.UseCompatibleStateImageBehavior = false;
             this.lvTaskSummary.View = System.Windows.Forms.View.Details;
             this.lvTaskSummary.SelectedIndexChanged += new System.EventHandler(this.lvTaskSummary_SelectedIndexChanged);
-
-            // Add columns for task summary
             this.lvTaskSummary.Columns.Add("ID", 50);
             this.lvTaskSummary.Columns.Add("Title", 180);
             // 
@@ -54,112 +71,150 @@ namespace TaskManagementApp
             this.lvTaskDetails.TabIndex = 1;
             this.lvTaskDetails.UseCompatibleStateImageBehavior = false;
             this.lvTaskDetails.View = System.Windows.Forms.View.Details;
-
-            // Add columns for task details
             this.lvTaskDetails.Columns.Add("Task", 150);
             this.lvTaskDetails.Columns.Add("Details", 380);
             // 
             // btnAddTask
             // 
-            this.btnAddTask.BorderRadius = 15;
-            this.btnAddTask.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
-            this.btnAddTask.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
-            this.btnAddTask.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
-            this.btnAddTask.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
-            this.btnAddTask.Font = new System.Drawing.Font("Segoe UI Semibold", 12F);
+            this.btnAddTask.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.btnAddTask.ForeColor = System.Drawing.Color.White;
-            this.btnAddTask.Location = new System.Drawing.Point(30, 450);
+            this.btnAddTask.Location = new System.Drawing.Point(101, 450);
             this.btnAddTask.Name = "btnAddTask";
             this.btnAddTask.Size = new System.Drawing.Size(100, 30);
-            this.btnAddTask.TabIndex = 5;
+            this.btnAddTask.TabIndex = 2;
             this.btnAddTask.Text = "Add Task";
             this.btnAddTask.Click += new System.EventHandler(this.btnAddTask_Click);
             // 
             // btnTaskLists
             // 
-            this.btnTaskLists.BorderRadius = 15;
-            this.btnTaskLists.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
-            this.btnTaskLists.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
-            this.btnTaskLists.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
-            this.btnTaskLists.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
-            this.btnTaskLists.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-            this.btnTaskLists.Font = new System.Drawing.Font("Segoe UI Semibold", 12F);
+            this.btnTaskLists.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.btnTaskLists.ForeColor = System.Drawing.Color.White;
-            this.btnTaskLists.Location = new System.Drawing.Point(136, 450);
+            this.btnTaskLists.Location = new System.Drawing.Point(300, 450);
             this.btnTaskLists.Name = "btnTaskLists";
             this.btnTaskLists.Size = new System.Drawing.Size(100, 30);
-            this.btnTaskLists.TabIndex = 6;
+            this.btnTaskLists.TabIndex = 3;
             this.btnTaskLists.Text = "Task Lists";
             this.btnTaskLists.Click += new System.EventHandler(this.btnTaskLists_Click);
             // 
-            // Task
-            // 
-            this.Task.Text = "Task";
-            this.Task.Width = 150;
-            // 
-            // Details
-            // 
-            this.Details.Text = "Details";
-            this.Details.Width = 380;
-            // 
             // btnLogout
             // 
-            this.btnLogout.BorderRadius = 15;
-            this.btnLogout.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
-            this.btnLogout.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
-            this.btnLogout.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
-            this.btnLogout.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
             this.btnLogout.FillColor = System.Drawing.Color.Red;
-            this.btnLogout.Font = new System.Drawing.Font("Segoe UI Semibold", 12F);
+            this.btnLogout.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.btnLogout.ForeColor = System.Drawing.Color.White;
-            this.btnLogout.Location = new System.Drawing.Point(242, 450);
+            this.btnLogout.Location = new System.Drawing.Point(997, 450);
             this.btnLogout.Name = "btnLogout";
             this.btnLogout.Size = new System.Drawing.Size(100, 30);
-            this.btnLogout.TabIndex = 7;
+            this.btnLogout.TabIndex = 4;
             this.btnLogout.Text = "Logout";
             this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
+            // 
+            // btnEditTask
+            // 
+            this.btnEditTask.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btnEditTask.ForeColor = System.Drawing.Color.White;
+            this.btnEditTask.Location = new System.Drawing.Point(543, 450);
+            this.btnEditTask.Name = "btnEditTask";
+            this.btnEditTask.Size = new System.Drawing.Size(90, 30);
+            this.btnEditTask.TabIndex = 5;
+            this.btnEditTask.Text = "Edit Task";
+            this.btnEditTask.Click += new System.EventHandler(this.btnEditTask_Click);
+            // 
+            // btnSearch
+            // 
+            this.btnSearch.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btnSearch.ForeColor = System.Drawing.Color.White;
+            this.btnSearch.Location = new System.Drawing.Point(870, 300);
+            this.btnSearch.Name = "btnSearch";
+            this.btnSearch.Size = new System.Drawing.Size(80, 30);
+            this.btnSearch.TabIndex = 7;
+            this.btnSearch.Text = "Search";
+            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
+            // 
+            // btnFilterPriority
+            // 
+            this.btnFilterPriority.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btnFilterPriority.ForeColor = System.Drawing.Color.White;
+            this.btnFilterPriority.Location = new System.Drawing.Point(1027, 204);
+            this.btnFilterPriority.Name = "btnFilterPriority";
+            this.btnFilterPriority.Size = new System.Drawing.Size(70, 30);
+            this.btnFilterPriority.TabIndex = 9;
+            this.btnFilterPriority.Text = "Filter";
+            this.btnFilterPriority.Click += new System.EventHandler(this.btnFilterPriority_Click);
             // 
             // exitMainButton
             // 
             this.exitMainButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.exitMainButton.FillColor = System.Drawing.Color.Transparent;
-            this.exitMainButton.Font = new System.Drawing.Font("Segoe UI Semibold", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.exitMainButton.IconColor = System.Drawing.Color.Red;
-            this.exitMainButton.Location = new System.Drawing.Point(847, 3);
+            this.exitMainButton.Location = new System.Drawing.Point(1092, 2);
             this.exitMainButton.Name = "exitMainButton";
             this.exitMainButton.Size = new System.Drawing.Size(30, 30);
-            this.exitMainButton.TabIndex = 8;
+            this.exitMainButton.TabIndex = 10;
+            // 
+            // txtSearch
+            // 
+            this.txtSearch.Location = new System.Drawing.Point(870, 257);
+            this.txtSearch.Name = "txtSearch";
+            this.txtSearch.Size = new System.Drawing.Size(150, 20);
+            this.txtSearch.TabIndex = 6;
+            // 
+            // cbPriorityFilter
+            // 
+            this.cbPriorityFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbPriorityFilter.Items.AddRange(new object[] {
+            "All",
+            "Low",
+            "Medium",
+            "High"});
+            this.cbPriorityFilter.Location = new System.Drawing.Point(870, 204);
+            this.cbPriorityFilter.Name = "cbPriorityFilter";
+            this.cbPriorityFilter.Size = new System.Drawing.Size(150, 21);
+            this.cbPriorityFilter.TabIndex = 8;
+            // 
+            // btnDeleteTask
+            // 
+            this.btnDeleteTask.BorderRadius = 15;
+            this.btnDeleteTask.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.btnDeleteTask.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.btnDeleteTask.ForeColor = System.Drawing.Color.White;
+            this.btnDeleteTask.Location = new System.Drawing.Point(780, 450);
+            this.btnDeleteTask.Name = "btnDeleteTask";
+            this.btnDeleteTask.Size = new System.Drawing.Size(70, 30);
+            this.btnDeleteTask.TabIndex = 12;
+            this.btnDeleteTask.Text = "Delete";
+            this.btnDeleteTask.Click += new System.EventHandler(this.btnDeleteTask_Click);
+            // 
+            // calendar
+            // 
+            this.calendar.Location = new System.Drawing.Point(870, 30);
+            this.calendar.MaxSelectionCount = 1;
+            this.calendar.Name = "calendar";
+            this.calendar.TabIndex = 11;
+            this.calendar.DateChanged += new System.Windows.Forms.DateRangeEventHandler(this.calendar_DateChanged);
             // 
             // MainForm
             // 
-            this.ClientSize = new System.Drawing.Size(880, 510);
-            this.Controls.Add(this.exitMainButton);
-            this.Controls.Add(this.btnLogout);
-            this.Controls.Add(this.btnTaskLists);
-            this.Controls.Add(this.btnAddTask);
+            this.ClientSize = new System.Drawing.Size(1123, 510);
             this.Controls.Add(this.lvTaskSummary);
             this.Controls.Add(this.lvTaskDetails);
+            this.Controls.Add(this.btnAddTask);
+            this.Controls.Add(this.btnTaskLists);
+            this.Controls.Add(this.btnLogout);
+            this.Controls.Add(this.btnEditTask);
+            this.Controls.Add(this.txtSearch);
+            this.Controls.Add(this.btnSearch);
+            this.Controls.Add(this.cbPriorityFilter);
+            this.Controls.Add(this.btnFilterPriority);
+            this.Controls.Add(this.exitMainButton);
+            this.Controls.Add(this.calendar);
+            this.Controls.Add(this.btnDeleteTask);
             this.Name = "MainForm";
             this.Text = "Task Manager";
             this.ResumeLayout(false);
-
-            this.calendar = new System.Windows.Forms.MonthCalendar();
-            this.calendar.Location = new System.Drawing.Point(870, 30);
-            this.calendar.MaxSelectionCount = 1;
-            this.calendar.DateChanged += new System.Windows.Forms.DateRangeEventHandler(this.calendar_DateChanged);
-            this.Controls.Add(this.calendar);
+            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.ListView lvTaskSummary;
-        private System.Windows.Forms.ListView lvTaskDetails;
-        private Guna.UI2.WinForms.Guna2Button btnAddTask;
-        private Guna.UI2.WinForms.Guna2Button btnTaskLists;
-        private ColumnHeader Task;
-        private ColumnHeader Details;
-        private Guna.UI2.WinForms.Guna2Button btnLogout;
-        private Guna.UI2.WinForms.Guna2ControlBox exitMainButton;
     }
 }

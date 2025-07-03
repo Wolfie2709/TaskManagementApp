@@ -79,6 +79,25 @@ namespace TaskManagementApp
 
             this.Close();
         }
+        private void lvTaskLists_DoubleClick(object sender, EventArgs e)
+        {
+            if (lvTaskLists.SelectedItems.Count > 0)
+            {
+                var selectedItem = lvTaskLists.SelectedItems[0];
+
+                SelectedTaskList = new TaskList
+                {
+                    TaskListID = int.Parse(selectedItem.SubItems[0].Text),
+                    Name = selectedItem.SubItems[1].Text,
+                    Description = selectedItem.SubItems[2].Text,
+                    UserID = currentUser.UserID
+                };
+
+                this.DialogResult = DialogResult.OK;
+                this.Close();
+            }
+        }
+
 
     }
 }
