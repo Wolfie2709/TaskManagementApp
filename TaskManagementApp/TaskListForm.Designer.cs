@@ -30,6 +30,8 @@ namespace TaskManagementApp
             this.lvTaskLists.TabIndex = 0;
             this.lvTaskLists.UseCompatibleStateImageBehavior = false;
             this.lvTaskLists.View = System.Windows.Forms.View.Details;
+            this.lvTaskLists.DoubleClick += new System.EventHandler(this.lvTaskLists_DoubleClick);
+
 
             // Add columns
             this.lvTaskLists.Columns.Add("ID", 50);

@@ -101,6 +101,42 @@ VALUES (@UserID, @Title, @Description, @Status, @DueDate, @Priority, @TaskListID
             return tasks;
         }
 
+        public bool UpdateTask(AppTask task)
+        {
+            using (SqlConnection conn = DatabaseHelper.GetConnection())
+            {
+                conn.Open();
+                string query = @"UPDATE Tasks SET 
+                            Title = @Title,
+                            Description = @Description,
+                            Status = @Status,
+                            DueDate = @DueDate,
+                            Priority = @Priority
+                         WHERE TaskID = @TaskID";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@Title", task.Title);
+                cmd.Parameters.AddWithValue("@Description", task.Description);
+                cmd.Parameters.AddWithValue("@Status", task.Status);
+                cmd.Parameters.AddWithValue("@DueDate", (object)task.DueDate ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Priority", task.Priority);
+                cmd.Parameters.AddWithValue("@TaskID", task.TaskID);
+
+                return cmd.ExecuteNonQuery() > 0;
+            }
+        }
+        public bool DeleteTask(int taskId)
+        {
+            using (SqlConnection conn = DatabaseHelper.GetConnection())
+            {
+                conn.Open();
+                string query = "DELETE FROM Tasks WHERE TaskID = @TaskID";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@TaskID", taskId);
+
+                return cmd.ExecuteNonQuery() > 0;
+            }
+        }
 
         // Optional: AddTask, UpdateTask, DeleteTask methods later
     }

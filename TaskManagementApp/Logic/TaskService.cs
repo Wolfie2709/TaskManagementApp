@@ -28,6 +28,16 @@ namespace TaskManagementApp
         {
             return taskDAL.GetTasksByUserAndTaskList(userId, taskListId);
         }
+        public bool UpdateTask(AppTask task)
+        {
+            return taskDAL.UpdateTask(task);
+        }
+
+        public bool DeleteTask(int taskId)
+        {
+            return taskDAL.DeleteTask(taskId);
+        }
+
 
     }
 }
