@@ -14,6 +14,10 @@ namespace TaskManagementApp.Models
         public string Priority { get; set; }
         public DateTime CreatedAt { get; set; } // ✅ Add this
         public int? TaskListID { get; set; }
-
+        public string AssigneeName { get; set; }
+        public DateTime? AssignedDate { get; set; }
+        public int Progress { get; set; }
+        public string Tags { get; set; } 
+        public string Comments { get; set; }
     }
 }
