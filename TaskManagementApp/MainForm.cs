@@ -2,7 +2,6 @@
 using System.Windows.Forms;
 using AppTask = TaskManagementApp.Models.Task;
 using TaskManagementApp.Models;
-using System.Linq;
 
 namespace TaskManagementApp
 {
@@ -30,23 +29,7 @@ namespace TaskManagementApp
             calendar.DateChanged += calendar_DateChanged;
             btnEditTask.Click += btnEditTask_Click;
             btnSearch.Click += btnSearch_Click;
-            btnFilter.Click += btnFilter_Click;
-
-            cbFilter.Items.AddRange(new object[]
-            {
-                "All",
-                "Priority: High",
-                "Priority: Medium",
-                "Priority: Low",
-                "Priority: Urgent",
-                "Status: To Do",
-                "Status: In Progress",
-                "Status: Done",
-                "Tag: Urgent",
-                "Tag: Work",
-                "Tag: School"
-            });
-            cbFilter.SelectedIndex = 0;
+            btnFilterPriority.Click += btnFilterPriority_Click;
         }
 
         private void lvTaskSummary_SelectedIndexChanged(object sender, EventArgs e)
@@ -202,43 +185,20 @@ namespace TaskManagementApp
             lvTaskDetails.Items.Clear();
         }
 
-        private void btnFilter_Click(object sender, EventArgs e)
+        private void btnFilterPriority_Click(object sender, EventArgs e)
         {
             if (currentTaskList == null) return;
 
-            string selected = cbFilter.SelectedItem?.ToString();
+            string selectedPriority = cbPriorityFilter.SelectedItem?.ToString();
             var tasks = taskService.GetTasksByUserAndTaskList(currentUser.UserID, currentTaskList.TaskListID);
 
-            MessageBox.Show($"Loaded {tasks.Count} tasks from DB before filtering.");
-
-            if (!string.IsNullOrEmpty(selected) && selected != "All")
+            if (selectedPriority != "All")
             {
-                if (selected.StartsWith("Priority: "))
-                {
-                    string value = selected.Substring(9);
-                    tasks = tasks.FindAll(t => t.Priority.Equals(value, StringComparison.OrdinalIgnoreCase));
-                }
-                else if (selected.StartsWith("Status: "))
-                {
-                    string value = selected.Substring(8);
-                    tasks = tasks.FindAll(t => t.Status.Equals(value, StringComparison.OrdinalIgnoreCase));
-                }
-                else if (selected.StartsWith("Assignee: "))
-                {
-                    string value = selected.Substring(10);
-                    tasks = tasks.FindAll(t => t.AssigneeName != null && t.AssigneeName.Equals(value, StringComparison.OrdinalIgnoreCase));
-                }
-                else if (selected.StartsWith("Tag: "))
-                {
-                    string value = selected.Substring(5);
-                    tasks = tasks.FindAll(t => !string.IsNullOrEmpty(t.Tags) && t.Tags.Split(',').Select(tag => tag.Trim()).Contains(value));
-                }
+                tasks = tasks.FindAll(t => t.Priority.Equals(selectedPriority, StringComparison.OrdinalIgnoreCase));
             }
 
-            MessageBox.Show($"Showing {tasks.Count} tasks after filtering.");
-
             lvTaskSummary.Items.Clear();
-            foreach (Task task in tasks)
+            foreach (AppTask task in tasks)
             {
                 var item = new ListViewItem(task.TaskID.ToString());
                 item.SubItems.Add(task.Title);
@@ -248,6 +208,7 @@ namespace TaskManagementApp
 
             lvTaskDetails.Items.Clear();
         }
+
     }
 
 }
