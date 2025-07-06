@@ -14,11 +14,11 @@ namespace TaskManagementApp
         private Guna.UI2.WinForms.Guna2Button btnLogout;
         private Guna.UI2.WinForms.Guna2Button btnEditTask;
         private Guna.UI2.WinForms.Guna2Button btnSearch;
-        private Guna.UI2.WinForms.Guna2Button btnFilter;
+        private Guna.UI2.WinForms.Guna2Button btnFilterPriority;
         private Guna.UI2.WinForms.Guna2ControlBox exitMainButton;
         private Guna.UI2.WinForms.Guna2Button btnDeleteTask;
         private TextBox txtSearch;
-        private ComboBox cbFilter;
+        private ComboBox cbPriorityFilter;
         private ColumnHeader Task;
         private ColumnHeader Details;
 
@@ -40,10 +40,10 @@ namespace TaskManagementApp
             this.btnLogout = new Guna.UI2.WinForms.Guna2Button();
             this.btnEditTask = new Guna.UI2.WinForms.Guna2Button();
             this.btnSearch = new Guna.UI2.WinForms.Guna2Button();
-            this.btnFilter = new Guna.UI2.WinForms.Guna2Button();
+            this.btnFilterPriority = new Guna.UI2.WinForms.Guna2Button();
             this.exitMainButton = new Guna.UI2.WinForms.Guna2ControlBox();
             this.txtSearch = new System.Windows.Forms.TextBox();
-            this.cbFilter = new System.Windows.Forms.ComboBox();
+            this.cbPriorityFilter = new System.Windows.Forms.ComboBox();
             this.btnDeleteTask = new Guna.UI2.WinForms.Guna2Button();
             this.calendar = new System.Windows.Forms.MonthCalendar();
             this.SuspendLayout();
@@ -59,6 +59,8 @@ namespace TaskManagementApp
             this.lvTaskSummary.UseCompatibleStateImageBehavior = false;
             this.lvTaskSummary.View = System.Windows.Forms.View.Details;
             this.lvTaskSummary.SelectedIndexChanged += new System.EventHandler(this.lvTaskSummary_SelectedIndexChanged);
+            this.lvTaskSummary.Columns.Add("ID", 50);
+            this.lvTaskSummary.Columns.Add("Title", 180);
             // 
             // lvTaskDetails
             // 
@@ -69,6 +71,8 @@ namespace TaskManagementApp
             this.lvTaskDetails.TabIndex = 1;
             this.lvTaskDetails.UseCompatibleStateImageBehavior = false;
             this.lvTaskDetails.View = System.Windows.Forms.View.Details;
+            this.lvTaskDetails.Columns.Add("Task", 150);
+            this.lvTaskDetails.Columns.Add("Details", 380);
             // 
             // btnAddTask
             // 
@@ -126,16 +130,16 @@ namespace TaskManagementApp
             this.btnSearch.Text = "Search";
             this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
-            // btnFilter
+            // btnFilterPriority
             // 
-            this.btnFilter.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.btnFilter.ForeColor = System.Drawing.Color.White;
-            this.btnFilter.Location = new System.Drawing.Point(1027, 204);
-            this.btnFilter.Name = "btnFilter";
-            this.btnFilter.Size = new System.Drawing.Size(70, 30);
-            this.btnFilter.TabIndex = 9;
-            this.btnFilter.Text = "Filter";
-            this.btnFilter.Click += new System.EventHandler(this.btnFilter_Click);
+            this.btnFilterPriority.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btnFilterPriority.ForeColor = System.Drawing.Color.White;
+            this.btnFilterPriority.Location = new System.Drawing.Point(1027, 204);
+            this.btnFilterPriority.Name = "btnFilterPriority";
+            this.btnFilterPriority.Size = new System.Drawing.Size(70, 30);
+            this.btnFilterPriority.TabIndex = 9;
+            this.btnFilterPriority.Text = "Filter";
+            this.btnFilterPriority.Click += new System.EventHandler(this.btnFilterPriority_Click);
             // 
             // exitMainButton
             // 
@@ -154,18 +158,18 @@ namespace TaskManagementApp
             this.txtSearch.Size = new System.Drawing.Size(150, 20);
             this.txtSearch.TabIndex = 6;
             // 
-            // cbFilter
+            // cbPriorityFilter
             // 
-            this.cbFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbFilter.Items.AddRange(new object[] {
+            this.cbPriorityFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbPriorityFilter.Items.AddRange(new object[] {
             "All",
             "Low",
             "Medium",
             "High"});
-            this.cbFilter.Location = new System.Drawing.Point(870, 204);
-            this.cbFilter.Name = "cbFilter";
-            this.cbFilter.Size = new System.Drawing.Size(150, 21);
-            this.cbFilter.TabIndex = 8;
+            this.cbPriorityFilter.Location = new System.Drawing.Point(870, 204);
+            this.cbPriorityFilter.Name = "cbPriorityFilter";
+            this.cbPriorityFilter.Size = new System.Drawing.Size(150, 21);
+            this.cbPriorityFilter.TabIndex = 8;
             // 
             // btnDeleteTask
             // 
@@ -199,8 +203,8 @@ namespace TaskManagementApp
             this.Controls.Add(this.btnEditTask);
             this.Controls.Add(this.txtSearch);
             this.Controls.Add(this.btnSearch);
-            this.Controls.Add(this.cbFilter);
-            this.Controls.Add(this.btnFilter);
+            this.Controls.Add(this.cbPriorityFilter);
+            this.Controls.Add(this.btnFilterPriority);
             this.Controls.Add(this.exitMainButton);
             this.Controls.Add(this.calendar);
             this.Controls.Add(this.btnDeleteTask);

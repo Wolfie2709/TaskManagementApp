@@ -9,7 +9,7 @@ namespace TaskManagementApp.DataAccess
 {
     public static class DatabaseHelper
     {
-        public static string ConnectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=ToDoList;Integrated Security=True";
+        public static string ConnectionString = @"Data Source=Wolfie-PC69\SQLSERWOLF;Initial Catalog=ToDoList;Integrated Security=True";
 
         public static SqlConnection GetConnection()
         {
