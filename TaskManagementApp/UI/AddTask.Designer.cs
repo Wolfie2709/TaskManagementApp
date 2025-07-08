@@ -184,7 +184,6 @@ namespace TaskManagementApp
             this.cbCategory.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.cbCategory.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(88)))), ((int)(((byte)(112)))));
             this.cbCategory.ItemHeight = 30;
-            cbCategory.DataSource = categoryService.GetCategories(); // List<Category>
             cbCategory.DisplayMember = "Name";        // Show category name in UI
             cbCategory.ValueMember = "CategoryID";    // Used internally for saving
 

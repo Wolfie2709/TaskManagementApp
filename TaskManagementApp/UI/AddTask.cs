@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using TaskManagementApp.Models;
+using TaskManagementApp.Services;
 using AppTask = TaskManagementApp.Models.Task;
 
 namespace TaskManagementApp
@@ -18,7 +19,7 @@ namespace TaskManagementApp
 
             // Enable or disable the date picker based on checkbox state
             chkEnableDate.CheckedChanged += ChkEnableDate_CheckedChanged;
-
+            categoryService = new CategoryService();
             currentUser = user;
             currentTaskList = taskList;
             editingTask = taskToEdit;
