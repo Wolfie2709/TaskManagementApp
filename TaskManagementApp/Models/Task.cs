@@ -10,12 +10,14 @@ namespace TaskManagementApp.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public string Status { get; set; }
-        public DateTime? DueDate { get; set; } // make nullable if optional
+        public DateTime? DueDate { get; set; } 
         public string Priority { get; set; }
-        public DateTime CreatedAt { get; set; } // ✅ Add this
+        public DateTime CreatedAt { get; set; } 
         public int? TaskListID { get; set; }
 
         public bool HasNotified { get; set; } = false;
+        public Category Category { get; set; }
+
 
     }
 }

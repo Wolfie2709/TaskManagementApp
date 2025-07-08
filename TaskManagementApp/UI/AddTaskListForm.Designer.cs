@@ -1,8 +1,20 @@
-﻿namespace TaskManagementApp
+﻿using System;
+using System.Windows.Forms;
+using Guna.UI2.WinForms;
+using System.Drawing;
+
+namespace TaskManagementApp
 {
     partial class AddTaskListForm
     {
         private System.ComponentModel.IContainer components = null;
+
+        private Guna2TextBox txtName;
+        private Guna2TextBox txtDescription;
+        private Guna2Button btnSave;
+        private Guna2Button btnCancel;
+        private Label lblName;
+        private Label lblDescription;
 
         protected override void Dispose(bool disposing)
         {
@@ -11,83 +23,94 @@
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
-
         private void InitializeComponent()
         {
-            this.lblName = new System.Windows.Forms.Label();
-            this.lblDescription = new System.Windows.Forms.Label();
-            this.txtName = new System.Windows.Forms.TextBox();
-            this.txtDescription = new System.Windows.Forms.TextBox();
-            this.btnSave = new System.Windows.Forms.Button();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.SuspendLayout();
+            this.txtName = new Guna2TextBox();
+            this.txtDescription = new Guna2TextBox();
+            this.btnSave = new Guna2Button();
+            this.btnCancel = new Guna2Button();
+            this.lblName = new Label();
+            this.lblDescription = new Label();
+
             // 
             // lblName
             // 
-            this.lblName.Location = new System.Drawing.Point(30, 30);
-            this.lblName.Name = "lblName";
-            this.lblName.Size = new System.Drawing.Size(100, 23);
-            this.lblName.Text = "List Name:";
-            // 
-            // lblDescription
-            // 
-            this.lblDescription.Location = new System.Drawing.Point(30, 80);
-            this.lblDescription.Name = "lblDescription";
-            this.lblDescription.Size = new System.Drawing.Size(100, 23);
-            this.lblDescription.Text = "Description:";
+            lblName.Text = "📋 List Name:";
+            lblName.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lblName.ForeColor = Color.White;
+            lblName.Location = new Point(30, 30);
+            lblName.Size = new Size(100, 25);
+
             // 
             // txtName
             // 
-            this.txtName.Location = new System.Drawing.Point(140, 30);
-            this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(250, 23);
+            txtName.PlaceholderText = "Enter task list name";
+            txtName.Location = new Point(140, 30);
+            txtName.Size = new Size(250, 30);
+            txtName.BorderRadius = 6;
+            txtName.Font = new Font("Segoe UI", 10F);
+            txtName.FillColor = Color.FromArgb(240, 240, 240);
+
+            // 
+            // lblDescription
+            // 
+            lblDescription.Text = "📝 Description:";
+            lblDescription.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lblDescription.ForeColor = Color.White;
+            lblDescription.Location = new Point(30, 80);
+            lblDescription.Size = new Size(100, 25);
+
             // 
             // txtDescription
             // 
-            this.txtDescription.Location = new System.Drawing.Point(140, 80);
-            this.txtDescription.Multiline = true;
-            this.txtDescription.Name = "txtDescription";
-            this.txtDescription.Size = new System.Drawing.Size(250, 80);
+            txtDescription.PlaceholderText = "Enter description";
+            txtDescription.Location = new Point(140, 80);
+            txtDescription.Size = new Size(250, 80);
+            txtDescription.BorderRadius = 6;
+            txtDescription.Multiline = true;
+            txtDescription.Font = new Font("Segoe UI", 10F);
+            txtDescription.FillColor = Color.FromArgb(240, 240, 240);
+
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(140, 180);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(100, 30);
-            this.btnSave.Text = "Save";
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            btnSave.Text = "💾 Save";
+            btnSave.Size = new Size(100, 40);
+            btnSave.Location = new Point(140, 180);
+            btnSave.BorderRadius = 6;
+            btnSave.FillColor = Color.FromArgb(45, 140, 240);
+            btnSave.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btnSave.ForeColor = Color.White;
+            btnSave.Click += new EventHandler(this.btnSave_Click);
+
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(290, 180);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(100, 30);
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            btnCancel.Text = "❌ Cancel";
+            btnCancel.Size = new Size(100, 40);
+            btnCancel.Location = new Point(290, 180);
+            btnCancel.BorderRadius = 6;
+            btnCancel.FillColor = Color.FromArgb(220, 50, 60);
+            btnCancel.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btnCancel.ForeColor = Color.White;
+            btnCancel.Click += new EventHandler(this.btnCancel_Click);
+
             // 
             // AddTaskListForm
             // 
-            this.ClientSize = new System.Drawing.Size(430, 240);
-            this.Controls.Add(this.lblName);
-            this.Controls.Add(this.txtName);
-            this.Controls.Add(this.lblDescription);
-            this.Controls.Add(this.txtDescription);
-            this.Controls.Add(this.btnSave);
-            this.Controls.Add(this.btnCancel);
-            this.Name = "AddTaskListForm";
-            this.Text = "Add Task List";
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            this.BackColor = Color.FromArgb(35, 40, 50);
+            this.ClientSize = new Size(430, 250);
+            this.Controls.Add(lblName);
+            this.Controls.Add(txtName);
+            this.Controls.Add(lblDescription);
+            this.Controls.Add(txtDescription);
+            this.Controls.Add(btnSave);
+            this.Controls.Add(btnCancel);
+            this.FormBorderStyle = FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.Text = "🗂️ Add Task List";
         }
-
-        #endregion
-
-        private System.Windows.Forms.Label lblName;
-        private System.Windows.Forms.Label lblDescription;
-        private System.Windows.Forms.TextBox txtName;
-        private System.Windows.Forms.TextBox txtDescription;
-        private System.Windows.Forms.Button btnSave;
-        private System.Windows.Forms.Button btnCancel;
     }
 }

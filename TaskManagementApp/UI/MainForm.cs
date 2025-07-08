@@ -27,7 +27,7 @@ namespace TaskManagementApp
             priorityBox.ValueMember = "Priority";
 
             if (statusBox.Items.Count == 0)
-                statusBox.Items.AddRange(new[] { "All", "Pending", "Completed" });
+                statusBox.Items.AddRange(new[] { "All", "To Do", "In progress", "Done" });
 
             priorityBox.SelectedIndex = 0;
             statusBox.SelectedIndex = 0;
@@ -56,17 +56,15 @@ namespace TaskManagementApp
                 if (taskListForm.ShowDialog() == DialogResult.OK)
                 {
                     selectedTaskList = taskListForm.SelectedTaskList;
-                    LoadTaskSummaries(selectedTaskList.TaskListID); // ✅ fixed
+                    LoadTaskSummaries(selectedTaskList.TaskListID); 
                 }
             };
-
-
         }
 
         private void SetupDeadlineTimer()
         {
             deadlineTimer = new Timer();
-            deadlineTimer.Interval = 60000; // check every minute
+            deadlineTimer.Interval = 300000; // check every 30 sec
             deadlineTimer.Tick += DeadlineTimer_Tick;
             deadlineTimer.Start();
         }
@@ -151,11 +149,19 @@ namespace TaskManagementApp
             lvTaskDetails.Items.Add(new ListViewItem(new[] { "Status", task.Status }));
             lvTaskDetails.Items.Add(new ListViewItem(new[] { "Due Date", task.DueDate?.ToString("g") ?? "N/A" }));
             lvTaskDetails.Items.Add(new ListViewItem(new[] { "Priority", task.Priority }));
+            lvTaskDetails.Items.Add(new ListViewItem(new[] { "Category", task.Category?.Name ?? "N/A" }));
         }
 
         private void FilterTasks(object sender, EventArgs e)
         {
-            var tasks = taskService.GetTasksByUser(currentUser.UserID);
+            if (selectedTaskList == null)
+            {
+                MessageBox.Show("Please select a task list.", "No Task List Selected",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var tasks = taskService.GetTasksByUserAndTaskList(currentUser.UserID, selectedTaskList.TaskListID);
 
             string keyword = string.IsNullOrWhiteSpace(taskNameBox.Text)
                 ? null
@@ -166,7 +172,6 @@ namespace TaskManagementApp
 
             bool usePriority = !string.IsNullOrEmpty(selectedPriority) && selectedPriority != "All";
             bool useStatus = !string.IsNullOrEmpty(selectedStatus) && selectedStatus != "All";
-
             bool useKeyword = !string.IsNullOrEmpty(keyword);
             bool useDateFilter = chkEnableDateFilter.Checked;
             DateTime selectedDate = datePicker.Value.Date;
@@ -181,6 +186,8 @@ namespace TaskManagementApp
             RenderTasks(filtered);
         }
 
+
+
         private void ResetFilters(object sender, EventArgs e)
         {
             taskNameBox.Text = "";
@@ -189,11 +196,18 @@ namespace TaskManagementApp
             if (statusBox.Items.Count > 0) statusBox.SelectedIndex = 0;
 
             datePicker.Value = DateTime.Today;
-            datePicker.Text = ""; // Clear manually if Guna2DateTimePicker doesn’t expose `.Checked`
+            datePicker.Text = ""; // Clear manually if needed
 
-            var tasks = taskService.GetTasksByUser(currentUser.UserID);
+            if (selectedTaskList == null)
+            {
+                MessageBox.Show("Please select a task list first.", "No Task List Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var tasks = taskService.GetTasksByUserAndTaskList(currentUser.UserID, selectedTaskList.TaskListID);
             RenderTasks(tasks);
         }
+
 
         private void btnTaskLists_Click(object sender, EventArgs e)
         {
@@ -218,6 +232,56 @@ namespace TaskManagementApp
             {
                 LoadTaskSummaries(selectedTaskList.TaskListID); // Refresh view
             }
+        }
+        private void btnEditTask_Click(object sender, EventArgs e)
+        {
+            if (lvTaskSummary.SelectedItems.Count == 0)
+            {
+                MessageBox.Show("Please select a task to edit.", "No Task Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (selectedTaskList == null)
+            {
+                MessageBox.Show("Please choose a task list first.", "No Task List Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var selectedItem = lvTaskSummary.SelectedItems[0];
+            var selectedTask = selectedItem.Tag as Task;
+
+            if (selectedTask != null)
+            {
+                var editForm = new AddTask(currentUser, selectedTaskList, selectedTask);
+                if (editForm.ShowDialog() == DialogResult.OK)
+                {
+                    LoadTaskSummaries(selectedTaskList.TaskListID);
+                }
+            }
+        }
+        private void monthCalendar_DateSelected(object sender, DateRangeEventArgs e)
+        {
+            if (selectedTaskList == null)
+            {
+                MessageBox.Show("Please select a task list first.", "No Task List Selected");
+                return;
+            }
+
+            var selectedDate = e.Start.Date;
+            var allTasks = taskService.GetTasksByUserAndTaskList(currentUser.UserID, selectedTaskList.TaskListID);
+            var filteredTasks = allTasks.Where(t => t.DueDate.HasValue && t.DueDate.Value.Date == selectedDate).ToList();
+
+            lvTaskSummary.Items.Clear();
+
+            foreach (var task in filteredTasks)
+            {
+                var item = new ListViewItem(task.TaskID.ToString());
+                item.SubItems.Add(task.Title);
+                item.Tag = task;
+                lvTaskSummary.Items.Add(item);
+            }
+
+            lblCurrentList.Text = $"📆 Tasks for: {selectedDate:MMMM dd, yyyy}";
         }
 
     }

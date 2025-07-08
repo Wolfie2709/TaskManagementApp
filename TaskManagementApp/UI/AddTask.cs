@@ -33,6 +33,7 @@ namespace TaskManagementApp
                 txtDescription.Text = editingTask.Description;
                 cbStatus.SelectedItem = editingTask.Status;
                 cbPriority.SelectedItem = editingTask.Priority;
+                cbCategory.SelectedItem = editingTask.Category;
 
                 if (editingTask.DueDate.HasValue)
                 {
@@ -86,6 +87,7 @@ namespace TaskManagementApp
             string description = txtDescription.Text.Trim();
             string status = cbStatus.SelectedItem?.ToString() ?? "To Do";
             string priority = cbPriority.SelectedItem?.ToString() ?? "Medium";
+            Category selectedCategory = cbCategory.SelectedItem as Category;
             DateTime? dueDate = chkEnableDate.Checked ? dtpDueDate.Value.Date : (DateTime?)null;
 
             if (editingTask == null)
@@ -100,6 +102,8 @@ namespace TaskManagementApp
                     Status = status,
                     DueDate = dueDate,
                     Priority = priority,
+                    CategoryID = selectedCategory?.CategoryID ?? 0,
+                    Category = selectedCategory,
                     CreatedAt = DateTime.Now
                 };
 
@@ -126,6 +130,8 @@ namespace TaskManagementApp
                 editingTask.Status = status;
                 editingTask.DueDate = dueDate;
                 editingTask.Priority = priority;
+                editingTask.CategoryID = selectedCategory?.CategoryID ?? 0;
+                editingTask.Category = selectedCategory;
 
                 bool success = taskService.UpdateTask(editingTask);
 
@@ -143,6 +149,7 @@ namespace TaskManagementApp
                 }
             }
         }
+
 
         private void btnCancel_Click(object sender, EventArgs e)
         {

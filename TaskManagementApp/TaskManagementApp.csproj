@@ -53,6 +53,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataAccess\CategoryDAL.cs" />
+    <Compile Include="Logic\categoryService.cs" />
+    <Compile Include="Models\Category.cs" />
     <Compile Include="UI\AddTask.cs">
       <SubType>Form</SubType>
     </Compile>

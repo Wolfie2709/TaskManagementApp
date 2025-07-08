@@ -17,7 +17,7 @@ namespace TaskManagementApp
         private Guna.UI2.WinForms.Guna2Button btnAddList;
         private Guna.UI2.WinForms.Guna2Button btnLogout;
         private Guna.UI2.WinForms.Guna2CheckBox chkEnableDateFilter;
-
+        private Guna.UI2.WinForms.Guna2Button btnEditTask;
         private Guna.UI2.WinForms.Guna2HtmlLabel lblWelcome;
         private System.Windows.Forms.MonthCalendar monthCalendar;
         private Guna.UI2.WinForms.Guna2Panel panelSummary;
@@ -32,6 +32,7 @@ namespace TaskManagementApp
         private Guna.UI2.WinForms.Guna2Button btnSearch;
         private Guna.UI2.WinForms.Guna2Button btnReset;
         private Guna.UI2.WinForms.Guna2Button btnAddTask;
+        private Guna.UI2.WinForms.Guna2HtmlLabel lblCurrentList;
 
         protected override void Dispose(bool disposing)
         {
@@ -42,6 +43,7 @@ namespace TaskManagementApp
         private void InitializeComponent()
         {
             this.sidebarPanel = new Guna.UI2.WinForms.Guna2Panel();
+            this.btnEditTask = new Guna.UI2.WinForms.Guna2Button();
             this.btnToday = new Guna.UI2.WinForms.Guna2Button();
             this.btnUpcoming = new Guna.UI2.WinForms.Guna2Button();
             this.btnTaskLists = new Guna.UI2.WinForms.Guna2Button();
@@ -62,6 +64,7 @@ namespace TaskManagementApp
             this.btnSearch = new Guna.UI2.WinForms.Guna2Button();
             this.btnReset = new Guna.UI2.WinForms.Guna2Button();
             this.chkEnableDateFilter = new Guna.UI2.WinForms.Guna2CheckBox();
+            this.lblCurrentList = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.sidebarPanel.SuspendLayout();
             this.panelSummary.SuspendLayout();
             this.panelDetails.SuspendLayout();
@@ -71,6 +74,8 @@ namespace TaskManagementApp
             // sidebarPanel
             // 
             this.sidebarPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(45)))), ((int)(((byte)(55)))));
+            this.sidebarPanel.Controls.Add(this.lblCurrentList);
+            this.sidebarPanel.Controls.Add(this.btnEditTask);
             this.sidebarPanel.Controls.Add(this.btnToday);
             this.sidebarPanel.Controls.Add(this.btnUpcoming);
             this.sidebarPanel.Controls.Add(this.btnTaskLists);
@@ -82,6 +87,19 @@ namespace TaskManagementApp
             this.sidebarPanel.Name = "sidebarPanel";
             this.sidebarPanel.Size = new System.Drawing.Size(180, 550);
             this.sidebarPanel.TabIndex = 0;
+            // 
+            // btnEditTask
+            // 
+            this.btnEditTask.BorderRadius = 8;
+            this.btnEditTask.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(55)))), ((int)(((byte)(65)))));
+            this.btnEditTask.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.btnEditTask.ForeColor = System.Drawing.Color.White;
+            this.btnEditTask.Location = new System.Drawing.Point(10, 244);
+            this.btnEditTask.Name = "btnEditTask";
+            this.btnEditTask.Size = new System.Drawing.Size(160, 40);
+            this.btnEditTask.TabIndex = 3;
+            this.btnEditTask.Text = "✏️ Edit Task";
+            this.btnEditTask.Click += new System.EventHandler(this.btnEditTask_Click);
             // 
             // btnToday
             // 
@@ -173,6 +191,7 @@ namespace TaskManagementApp
             this.monthCalendar.MaxSelectionCount = 1;
             this.monthCalendar.Name = "monthCalendar";
             this.monthCalendar.TabIndex = 2;
+            this.monthCalendar.DateSelected += new System.Windows.Forms.DateRangeEventHandler(this.monthCalendar_DateSelected);
             // 
             // lvTaskSummary
             // 
@@ -187,7 +206,6 @@ namespace TaskManagementApp
             lvTaskSummary.SelectedIndexChanged += lvTaskSummary_SelectedIndexChanged;
             lvTaskSummary.Columns.Add("ID", 50);
             lvTaskSummary.Columns.Add("Title", 160);
-
             // 
             // panelSummary
             // 
@@ -327,6 +345,17 @@ namespace TaskManagementApp
             this.chkEnableDateFilter.UncheckedState.BorderRadius = 0;
             this.chkEnableDateFilter.UncheckedState.BorderThickness = 0;
             // 
+            // lblCurrentList
+            // 
+            this.lblCurrentList.BackColor = System.Drawing.Color.Transparent;
+            this.lblCurrentList.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.lblCurrentList.ForeColor = System.Drawing.Color.White;
+            this.lblCurrentList.Location = new System.Drawing.Point(23, 303);
+            this.lblCurrentList.Name = "lblCurrentList";
+            this.lblCurrentList.Size = new System.Drawing.Size(147, 19);
+            this.lblCurrentList.TabIndex = 0;
+            this.lblCurrentList.Text = "📋 No task list selected";
+            // 
             // MainForm
             // 
             this.ClientSize = new System.Drawing.Size(1247, 550);
@@ -339,6 +368,7 @@ namespace TaskManagementApp
             this.Name = "MainForm";
             this.Text = "Task Manager";
             this.sidebarPanel.ResumeLayout(false);
+            this.sidebarPanel.PerformLayout();
             this.panelSummary.ResumeLayout(false);
             this.panelDetails.ResumeLayout(false);
             this.panelFilter.ResumeLayout(false);
