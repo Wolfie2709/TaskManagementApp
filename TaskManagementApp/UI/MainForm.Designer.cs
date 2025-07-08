@@ -33,6 +33,7 @@ namespace TaskManagementApp
         private Guna.UI2.WinForms.Guna2Button btnReset;
         private Guna.UI2.WinForms.Guna2Button btnAddTask;
         private Guna.UI2.WinForms.Guna2HtmlLabel lblCurrentList;
+        private System.Windows.Forms.Label lblListName;
 
         protected override void Dispose(bool disposing)
         {
@@ -43,6 +44,7 @@ namespace TaskManagementApp
         private void InitializeComponent()
         {
             this.sidebarPanel = new Guna.UI2.WinForms.Guna2Panel();
+            this.lblCurrentList = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.btnEditTask = new Guna.UI2.WinForms.Guna2Button();
             this.btnToday = new Guna.UI2.WinForms.Guna2Button();
             this.btnUpcoming = new Guna.UI2.WinForms.Guna2Button();
@@ -50,6 +52,7 @@ namespace TaskManagementApp
             this.btnAddList = new Guna.UI2.WinForms.Guna2Button();
             this.btnLogout = new Guna.UI2.WinForms.Guna2Button();
             this.btnAddTask = new Guna.UI2.WinForms.Guna2Button();
+            this.lblListName = new System.Windows.Forms.Label();
             this.lblWelcome = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.monthCalendar = new System.Windows.Forms.MonthCalendar();
             this.lvTaskSummary = new System.Windows.Forms.ListView();
@@ -64,7 +67,6 @@ namespace TaskManagementApp
             this.btnSearch = new Guna.UI2.WinForms.Guna2Button();
             this.btnReset = new Guna.UI2.WinForms.Guna2Button();
             this.chkEnableDateFilter = new Guna.UI2.WinForms.Guna2CheckBox();
-            this.lblCurrentList = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.sidebarPanel.SuspendLayout();
             this.panelSummary.SuspendLayout();
             this.panelDetails.SuspendLayout();
@@ -87,6 +89,17 @@ namespace TaskManagementApp
             this.sidebarPanel.Name = "sidebarPanel";
             this.sidebarPanel.Size = new System.Drawing.Size(180, 550);
             this.sidebarPanel.TabIndex = 0;
+            // 
+            // lblCurrentList
+            // 
+            this.lblCurrentList.BackColor = System.Drawing.Color.Transparent;
+            this.lblCurrentList.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.lblCurrentList.ForeColor = System.Drawing.Color.White;
+            this.lblCurrentList.Location = new System.Drawing.Point(10, 303);
+            this.lblCurrentList.Name = "lblCurrentList";
+            this.lblCurrentList.Size = new System.Drawing.Size(147, 19);
+            this.lblCurrentList.TabIndex = 0;
+            this.lblCurrentList.Text = "📋 No task list selected";
             // 
             // btnEditTask
             // 
@@ -175,6 +188,16 @@ namespace TaskManagementApp
             this.btnAddTask.Text = "➕ Add Task";
             this.btnAddTask.Click += new System.EventHandler(this.btnAddTask_Click);
             // 
+            // lblListName
+            // 
+            this.lblListName.AutoSize = true;
+            this.lblListName.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.lblListName.Location = new System.Drawing.Point(1008, 244);
+            this.lblListName.Name = "lblListName";
+            this.lblListName.Size = new System.Drawing.Size(125, 19);
+            this.lblListName.TabIndex = 5;
+            this.lblListName.Text = "List: Not Selected";
+            // 
             // lblWelcome
             // 
             this.lblWelcome.BackColor = System.Drawing.Color.Transparent;
@@ -229,6 +252,7 @@ namespace TaskManagementApp
             this.lvTaskDetails.View = System.Windows.Forms.View.Details;
             lvTaskDetails.Columns.Add("Property", 150);
             lvTaskDetails.Columns.Add("Value", 350);
+
             // 
             // panelDetails
             // 
@@ -345,20 +369,10 @@ namespace TaskManagementApp
             this.chkEnableDateFilter.UncheckedState.BorderRadius = 0;
             this.chkEnableDateFilter.UncheckedState.BorderThickness = 0;
             // 
-            // lblCurrentList
-            // 
-            this.lblCurrentList.BackColor = System.Drawing.Color.Transparent;
-            this.lblCurrentList.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.lblCurrentList.ForeColor = System.Drawing.Color.White;
-            this.lblCurrentList.Location = new System.Drawing.Point(23, 303);
-            this.lblCurrentList.Name = "lblCurrentList";
-            this.lblCurrentList.Size = new System.Drawing.Size(147, 19);
-            this.lblCurrentList.TabIndex = 0;
-            this.lblCurrentList.Text = "📋 No task list selected";
-            // 
             // MainForm
             // 
             this.ClientSize = new System.Drawing.Size(1247, 550);
+            this.Controls.Add(this.lblListName);
             this.Controls.Add(this.sidebarPanel);
             this.Controls.Add(this.lblWelcome);
             this.Controls.Add(this.monthCalendar);

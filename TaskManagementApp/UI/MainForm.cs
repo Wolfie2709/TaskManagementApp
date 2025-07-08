@@ -216,6 +216,10 @@ namespace TaskManagementApp
             {
                 selectedTaskList = taskListForm.SelectedTaskList;
                 LoadTaskSummaries(selectedTaskList.TaskListID);
+                lblListName.Text = $"📋 List: {selectedTaskList.Name}";
+
+                var tasks = taskService.GetTasksByUserAndTaskList(currentUser.UserID, selectedTaskList.TaskListID);
+                HighlightTaskDates(tasks);
             }
         }
 
@@ -282,6 +286,17 @@ namespace TaskManagementApp
             }
 
             lblCurrentList.Text = $"📆 Tasks for: {selectedDate:MMMM dd, yyyy}";
+        }
+        private void HighlightTaskDates(List<AppTask> tasks)
+        {
+            var dateSet = new HashSet<DateTime>();
+            foreach (var task in tasks)
+            {
+                if (task.DueDate.HasValue)
+                    dateSet.Add(task.DueDate.Value.Date);
+            }
+
+            monthCalendar.BoldedDates = dateSet.ToArray(); 
         }
 
     }
