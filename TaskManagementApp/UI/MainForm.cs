@@ -1,126 +1,149 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using TaskManagementApp.Models;
 using AppTask = TaskManagementApp.Models.Task;
+using TaskManagementApp.Models;
+using System.Collections.Generic;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace TaskManagementApp
 {
     public partial class MainForm : Form
     {
         private User currentUser;
-        private TaskList currentTaskList;
         private TaskService taskService = new TaskService();
-        private Guna.UI2.WinForms.Guna2BorderlessForm borderlessForm;
+        private Timer deadlineTimer;
+        private TaskList selectedTaskList;
 
         public MainForm(User user)
         {
             InitializeComponent();
-
-            borderlessForm = new Guna.UI2.WinForms.Guna2BorderlessForm(this);
-
-            this.StartPosition = FormStartPosition.CenterScreen;
             currentUser = user;
-            currentTaskList = null;
+            lblWelcome.Text = $"Welcome, {currentUser.FullName}";
 
+            // Populate dropdowns safely
+            if (priorityBox.Items.Count == 0)
+                priorityBox.Items.AddRange(new[] { "All", "High", "Medium", "Low" });
+            priorityBox.ValueMember = "Priority";
 
-            // Bind events
-            btnAddTask.Click += btnAddTask_Click;
-            btnTaskLists.Click += btnTaskLists_Click;
-            btnEditTask.Click += btnEditTask_Click;
-            btnDeleteTask.Click += btnDeleteTask_Click;
-            btnSearch.Click += btnSearch_Click;
-            btnFilterPriority.Click += btnFilterPriority_Click;
-            calendar.DateChanged += calendar_DateChanged;
-        }
+            if (statusBox.Items.Count == 0)
+                statusBox.Items.AddRange(new[] { "All", "Pending", "Completed" });
 
-        private void btnAddTask_Click(object sender, EventArgs e)
-        {
-            var form = new AddTask(currentUser, currentTaskList);
-            if (form.ShowDialog() == DialogResult.OK && currentTaskList != null)
-                LoadTasksByTaskList(currentTaskList.TaskListID);
-        }
+            priorityBox.SelectedIndex = 0;
+            statusBox.SelectedIndex = 0;
 
-        private void btnTaskLists_Click(object sender, EventArgs e)
-        {
-            var form = new TaskListForm(currentUser);
-            if (form.ShowDialog() == DialogResult.OK && form.SelectedTaskList != null)
+            if (selectedTaskList != null)
             {
-                currentTaskList = form.SelectedTaskList;
-                LoadTasksByTaskList(currentTaskList.TaskListID);
+                LoadTaskSummaries(selectedTaskList.TaskListID);
             }
-        }
-
-        private void btnEditTask_Click(object sender, EventArgs e)
-        {
-            if (lvTaskSummary.SelectedItems.Count == 0) return;
-            var task = lvTaskSummary.SelectedItems[0].Tag as AppTask;
-            if (task == null) return;
-
-            var form = new AddTask(currentUser, currentTaskList, task);
-            if (form.ShowDialog() == DialogResult.OK)
-                LoadTasksByTaskList(currentTaskList.TaskListID);
-        }
-
-        private void btnDeleteTask_Click(object sender, EventArgs e)
-        {
-            if (lvTaskSummary.SelectedItems.Count == 0) return;
-            var task = lvTaskSummary.SelectedItems[0].Tag as AppTask;
-            if (task == null) return;
-
-            if (MessageBox.Show("Delete this task?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            else
             {
-                if (taskService.DeleteTask(task.TaskID))
+                MessageBox.Show("Please select a task list first.", "No Task List Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
+            // Wire up filter controls
+            taskNameBox.TextChanged += FilterTasks;
+            priorityBox.SelectedIndexChanged += FilterTasks;
+            statusBox.SelectedIndexChanged += FilterTasks;
+            datePicker.ValueChanged += FilterTasks;
+            btnSearch.Click += FilterTasks;
+            btnReset.Click += ResetFilters;
+
+            SetupDeadlineTimer();
+            btnAddList.Click += (s, e) =>
+            {
+                var taskListForm = new TaskListForm(currentUser);
+                if (taskListForm.ShowDialog() == DialogResult.OK)
                 {
-                    LoadTasksByTaskList(currentTaskList.TaskListID);
-                    lvTaskDetails.Items.Clear();
+                    selectedTaskList = taskListForm.SelectedTaskList;
+                    LoadTaskSummaries(selectedTaskList.TaskListID); // ✅ fixed
+                }
+            };
+
+
+        }
+
+        private void SetupDeadlineTimer()
+        {
+            deadlineTimer = new Timer();
+            deadlineTimer.Interval = 60000; // check every minute
+            deadlineTimer.Tick += DeadlineTimer_Tick;
+            deadlineTimer.Start();
+        }
+
+        private void DeadlineTimer_Tick(object sender, EventArgs e)
+        {
+            var now = DateTime.Now;
+            var tasks = taskService.GetTasksByUser(currentUser.UserID);
+
+            foreach (var task in tasks)
+            {
+                if (task.DueDate.HasValue &&
+                    !task.HasNotified &&
+                    task.DueDate.Value <= now)
+                {
+                    ShowTaskNotification(task);
+                    task.HasNotified = true;
                 }
             }
         }
 
-        private void btnSearch_Click(object sender, EventArgs e)
+        private void ShowTaskNotification(AppTask task)
         {
-            if (currentTaskList == null) return;
-            string keyword = txtSearch.Text.ToLower();
-            var tasks = taskService.GetTasksByUserAndTaskList(currentUser.UserID, currentTaskList.TaskListID);
-            var filtered = tasks.Where(t =>
-                (!string.IsNullOrEmpty(t.Title) && t.Title.ToLower().Contains(keyword)) ||
-                (!string.IsNullOrEmpty(t.Description) && t.Description.ToLower().Contains(keyword))
-            ).ToList();
-
-            DisplayTasks(filtered);
+            MessageBox.Show($"⏰ Task deadline reached!\n\n{task.Title}",
+                            "Deadline Alert",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
         }
 
-        private void btnFilterPriority_Click(object sender, EventArgs e)
+        private void LoadTaskSummaries(int taskListID)
         {
-            if (currentTaskList == null) return;
-            string selected = cbPriorityFilter.SelectedItem?.ToString();
-            var tasks = taskService.GetTasksByUserAndTaskList(currentUser.UserID, currentTaskList.TaskListID);
+            var tasks = taskService.GetTasksByUserAndTaskList(currentUser.UserID, taskListID);
+            lvTaskSummary.Items.Clear();
 
-            if (selected != "All")
-                tasks = tasks.Where(t => t.Priority.Equals(selected, StringComparison.OrdinalIgnoreCase)).ToList();
-
-            DisplayTasks(tasks);
+            foreach (var task in tasks)
+            {
+                var item = new ListViewItem(task.TaskID.ToString());
+                item.SubItems.Add(task.Title);
+                item.Tag = task;
+                lvTaskSummary.Items.Add(item);
+            }
         }
 
-        private void calendar_DateChanged(object sender, DateRangeEventArgs e)
+        private void RenderTasks(List<AppTask> tasks)
         {
-            if (currentTaskList == null) return;
-            var selected = e.Start.Date;
-            var tasks = taskService.GetTasksByUserAndTaskList(currentUser.UserID, currentTaskList.TaskListID)
-                                   .Where(t => t.DueDate.HasValue && t.DueDate.Value.Date == selected)
-                                   .ToList();
+            lvTaskSummary.Items.Clear();
 
-            DisplayTasks(tasks);
+            foreach (var task in tasks)
+            {
+                var item = new ListViewItem(task.TaskID.ToString());
+                item.SubItems.Add(task.Title);
+                item.Tag = task;
+                lvTaskSummary.Items.Add(item);
+            }
+
+            // Highlight dates in calendar
+            var boldDates = tasks
+                .Where(t => t.DueDate.HasValue)
+                .Select(t => t.DueDate.Value.Date)
+                .Distinct()
+                .ToArray();
+
+            monthCalendar.BoldedDates = boldDates;
         }
 
         private void lvTaskSummary_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (lvTaskSummary.SelectedItems.Count == 0) return;
-            var task = lvTaskSummary.SelectedItems[0].Tag as AppTask;
-            if (task == null) return;
+
+            var selectedItem = lvTaskSummary.SelectedItems[0];
+            var task = selectedItem.Tag as AppTask;
+
+            if (task == null)
+            {
+                MessageBox.Show("Could not retrieve task data.");
+                return;
+            }
 
             lvTaskDetails.Items.Clear();
             lvTaskDetails.Items.Add(new ListViewItem(new[] { "Title", task.Title }));
@@ -130,41 +153,72 @@ namespace TaskManagementApp
             lvTaskDetails.Items.Add(new ListViewItem(new[] { "Priority", task.Priority }));
         }
 
-        private void LoadTasksByTaskList(int taskListId)
+        private void FilterTasks(object sender, EventArgs e)
         {
-            var tasks = taskService.GetTasksByUserAndTaskList(currentUser.UserID, taskListId);
+            var tasks = taskService.GetTasksByUser(currentUser.UserID);
 
-            // Bold dates with tasks
-            calendar.BoldedDates = tasks
-                .Where(t => t.DueDate.HasValue)
-                .Select(t => t.DueDate.Value.Date)
-                .Distinct()
-                .ToArray();
+            string keyword = string.IsNullOrWhiteSpace(taskNameBox.Text)
+                ? null
+                : taskNameBox.Text.Trim().ToLower();
 
-            DisplayTasks(tasks);
+            string selectedPriority = priorityBox.SelectedItem?.ToString();
+            string selectedStatus = statusBox.SelectedItem?.ToString();
+
+            bool usePriority = !string.IsNullOrEmpty(selectedPriority) && selectedPriority != "All";
+            bool useStatus = !string.IsNullOrEmpty(selectedStatus) && selectedStatus != "All";
+
+            bool useKeyword = !string.IsNullOrEmpty(keyword);
+            bool useDateFilter = chkEnableDateFilter.Checked;
+            DateTime selectedDate = datePicker.Value.Date;
+
+            var filtered = tasks.Where(t =>
+                (!useKeyword || t.Title?.ToLower().Contains(keyword) == true) &&
+                (!usePriority || string.Equals(t.Priority?.Trim(), selectedPriority.Trim(), StringComparison.OrdinalIgnoreCase)) &&
+                (!useStatus || string.Equals(t.Status?.Trim(), selectedStatus.Trim(), StringComparison.OrdinalIgnoreCase)) &&
+                (!useDateFilter || t.DueDate.HasValue && t.DueDate.Value.Date == selectedDate)
+            ).ToList();
+
+            RenderTasks(filtered);
         }
 
-        private void DisplayTasks(List<AppTask> tasks)
+        private void ResetFilters(object sender, EventArgs e)
         {
-            lvTaskSummary.Items.Clear();
+            taskNameBox.Text = "";
 
-            foreach (var task in tasks)
+            if (priorityBox.Items.Count > 0) priorityBox.SelectedIndex = 0;
+            if (statusBox.Items.Count > 0) statusBox.SelectedIndex = 0;
+
+            datePicker.Value = DateTime.Today;
+            datePicker.Text = ""; // Clear manually if Guna2DateTimePicker doesn’t expose `.Checked`
+
+            var tasks = taskService.GetTasksByUser(currentUser.UserID);
+            RenderTasks(tasks);
+        }
+
+        private void btnTaskLists_Click(object sender, EventArgs e)
+        {
+            var taskListForm = new TaskListForm(currentUser);
+            if (taskListForm.ShowDialog() == DialogResult.OK && taskListForm.SelectedTaskList != null)
             {
-                var item = new ListViewItem(task.TaskID.ToString());
-                item.SubItems.Add(task.Title);
-                item.Tag = task;
+                selectedTaskList = taskListForm.SelectedTaskList;
+                LoadTaskSummaries(selectedTaskList.TaskListID);
+            }
+        }
 
-                switch (task.Priority?.ToLower())
-                {
-                    case "low": item.BackColor = Color.LightGreen; break;
-                    case "medium": item.BackColor = Color.Khaki; break;
-                    case "high": item.BackColor = Color.Salmon; break;
-                }
-
-                lvTaskSummary.Items.Add(item);
+        private void btnAddTask_Click(object sender, EventArgs e)
+        {
+            if (selectedTaskList == null)
+            {
+                MessageBox.Show("Please choose a task list before adding a task.", "No Task List Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
             }
 
-            lvTaskDetails.Items.Clear();
+            var addForm = new AddTask(currentUser, selectedTaskList);
+            if (addForm.ShowDialog() == DialogResult.OK)
+            {
+                LoadTaskSummaries(selectedTaskList.TaskListID); // Refresh view
+            }
         }
+
     }
 }

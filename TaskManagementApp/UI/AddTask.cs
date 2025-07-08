@@ -3,7 +3,6 @@ using System.Windows.Forms;
 using TaskManagementApp.Models;
 using AppTask = TaskManagementApp.Models.Task;
 
-
 namespace TaskManagementApp
 {
     public partial class AddTask : Form
@@ -17,10 +16,14 @@ namespace TaskManagementApp
         {
             InitializeComponent();
 
+            // Enable or disable the date picker based on checkbox state
+            chkEnableDate.CheckedChanged += ChkEnableDate_CheckedChanged;
+
             currentUser = user;
             currentTaskList = taskList;
             editingTask = taskToEdit;
 
+            // If we're editing an existing task, populate the fields
             if (editingTask != null)
             {
                 this.Text = "Edit Task";
@@ -34,13 +37,36 @@ namespace TaskManagementApp
                 if (editingTask.DueDate.HasValue)
                 {
                     dtpDueDate.Value = editingTask.DueDate.Value;
-                    dtpDueDate.Checked = true;
+                    chkEnableDate.Checked = true;
+                    dtpDueDate.Enabled = true;
+                }
+                else
+                {
+                    chkEnableDate.Checked = false;
+                    dtpDueDate.Enabled = false;
                 }
             }
+            else
+            {
+                this.Text = "Add New Task";
+                btnSubmit.Text = "Add Task";
+
+                cbStatus.SelectedIndex = 0;
+                cbPriority.SelectedIndex = 1;
+
+                chkEnableDate.Checked = false;
+                dtpDueDate.Enabled = false;
+            }
+        }
+
+        private void ChkEnableDate_CheckedChanged(object sender, EventArgs e)
+        {
+            dtpDueDate.Enabled = chkEnableDate.Checked;
         }
 
         private void btnSubmit_Click(object sender, EventArgs e)
         {
+            // Title is required
             if (string.IsNullOrWhiteSpace(txtTitle.Text))
             {
                 MessageBox.Show("Task title is required.", "Validation Error",
@@ -48,18 +74,32 @@ namespace TaskManagementApp
                 return;
             }
 
+            // Prevent due date in the past if enabled
+            if (chkEnableDate.Checked && dtpDueDate.Value.Date < DateTime.Today)
+            {
+                MessageBox.Show("Due date cannot be in the past.", "Validation Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string title = txtTitle.Text.Trim();
+            string description = txtDescription.Text.Trim();
+            string status = cbStatus.SelectedItem?.ToString() ?? "To Do";
+            string priority = cbPriority.SelectedItem?.ToString() ?? "Medium";
+            DateTime? dueDate = chkEnableDate.Checked ? dtpDueDate.Value.Date : (DateTime?)null;
+
             if (editingTask == null)
             {
-                // Add new task
+                // Create a new task
                 var newTask = new AppTask
                 {
                     UserID = currentUser.UserID,
                     TaskListID = currentTaskList?.TaskListID ?? 0,
-                    Title = txtTitle.Text.Trim(),
-                    Description = txtDescription.Text.Trim(),
-                    Status = cbStatus.SelectedItem?.ToString() ?? "To Do",
-                    DueDate = dtpDueDate.Checked ? dtpDueDate.Value.Date : (DateTime?)null,
-                    Priority = cbPriority.SelectedItem?.ToString() ?? "Medium",
+                    Title = title,
+                    Description = description,
+                    Status = status,
+                    DueDate = dueDate,
+                    Priority = priority,
                     CreatedAt = DateTime.Now
                 };
 
@@ -67,38 +107,38 @@ namespace TaskManagementApp
 
                 if (success)
                 {
-                    MessageBox.Show("Task added successfully.", "Success",
+                    MessageBox.Show("✅ Task added successfully.", "Success",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.DialogResult = DialogResult.OK;
                     this.Close();
                 }
                 else
                 {
-                    MessageBox.Show("Failed to add task.", "Error",
+                    MessageBox.Show("❌ Failed to add task.", "Error",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else
             {
-                // Edit existing task
-                editingTask.Title = txtTitle.Text.Trim();
-                editingTask.Description = txtDescription.Text.Trim();
-                editingTask.Status = cbStatus.SelectedItem?.ToString() ?? "To Do";
-                editingTask.DueDate = dtpDueDate.Checked ? dtpDueDate.Value.Date : (DateTime?)null;
-                editingTask.Priority = cbPriority.SelectedItem?.ToString() ?? "Medium";
+                // Update existing task
+                editingTask.Title = title;
+                editingTask.Description = description;
+                editingTask.Status = status;
+                editingTask.DueDate = dueDate;
+                editingTask.Priority = priority;
 
                 bool success = taskService.UpdateTask(editingTask);
 
                 if (success)
                 {
-                    MessageBox.Show("Task updated successfully.", "Success",
+                    MessageBox.Show("✅ Task updated successfully.", "Success",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.DialogResult = DialogResult.OK;
                     this.Close();
                 }
                 else
                 {
-                    MessageBox.Show("Failed to update task.", "Error",
+                    MessageBox.Show("❌ Failed to update task.", "Error",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }

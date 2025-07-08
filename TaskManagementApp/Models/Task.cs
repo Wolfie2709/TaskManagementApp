@@ -15,5 +15,7 @@ namespace TaskManagementApp.Models
         public DateTime CreatedAt { get; set; } // ✅ Add this
         public int? TaskListID { get; set; }
 
+        public bool HasNotified { get; set; } = false;
+
     }
 }
